@@ -62,7 +62,19 @@ public class ConsumerWorker implements Runnable {
 		try {
 			Thread.currentThread().setName(CONSUMER_THREAD_NAME_FORMAT+consumerId);
 			logger.info("Starting ConsumerWorker, consumerId={}", consumerId);
-			consumer.subscribe(Pattern.compile(this.streamName+":.+"), new NoOpConsumerRebalanceListener());
+			SecurityManager sm = System.getSecurityManager();
+			if (sm != null) {
+			  // unprivileged code such as scripts do not have SpecialPermission
+			  sm.checkPermission(new SpecialPermission());
+			}
+
+			AccessController.doPrivileged(new PrivilegedAction<Object>() {
+				public Object run() {
+					consumer.subscribe(Pattern.compile(streamName+":.+"), new NoOpConsumerRebalanceListener());
+					return null;
+				}
+			});
+
 			while (true) {
 				boolean isPollFirstRecord = true;
 				int numProcessedMessages = 0;

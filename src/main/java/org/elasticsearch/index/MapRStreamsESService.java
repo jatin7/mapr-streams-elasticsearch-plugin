@@ -70,9 +70,9 @@ public class MapRStreamsESService extends AbstractLifecycleComponent {
 	private void init() {
 		Properties props = new Properties();
 		props.put("key.deserializer",
-				"org.apache.kafka.common.serialization.StringDeserializer");
+				org.apache.kafka.common.serialization.StringDeserializer.class);
 		props.put("value.deserializer",
-				"org.apache.kafka.common.serialization.StringDeserializer");
+				org.apache.kafka.common.serialization.StringDeserializer.class);
 		props.put("group.id", this.consumerGroup);
 		props.put("auto.offset.reset", "earliest");
 		//TODO - Should we add auto commit config ?
