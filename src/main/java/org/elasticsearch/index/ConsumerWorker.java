@@ -70,6 +70,7 @@ public class ConsumerWorker implements Runnable {
 
 			AccessController.doPrivileged(new PrivilegedAction<Object>() {
 				public Object run() {
+					logger.info(System.getProperty("java.library.path"));
 					consumer.subscribe(Pattern.compile(streamName+":.+"), new NoOpConsumerRebalanceListener());
 					return null;
 				}
@@ -93,7 +94,7 @@ public class ConsumerWorker implements Runnable {
 					data.put("offset", record.offset());
 					data.put("value", record.value());
 
-					logger.debug("consumerId={}; recieved record: {}", consumerId, data);
+					logger.info("consumerId={}; recieved record: {}", consumerId, data);
 					if (isPollFirstRecord) {
 						isPollFirstRecord = false;
 						logger.info("Start offset for partition {} in this poll : {}", record.partition(),
